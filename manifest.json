@@ -1,0 +1,9 @@
+{
+  "name": "LessSleep",
+  "version_number": "1.0.0",
+  "website_url": "https://github.com/LovelessCodes/LessSleep",
+  "description": "Sleep voting for dedicated servers: skip the night before everyone is in bed, if a configurable percentage of players agree. Works with vanilla clients.",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2350"
+  ]
+}
