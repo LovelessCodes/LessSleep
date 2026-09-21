@@ -21,14 +21,9 @@ runs:
         set -euo pipefail
         mkdir -p .refs/valheim
         chmod 777 .refs/valheim
-        docker run --rm -v "$PWD/.refs/valheim:/refs" --entrypoint /bin/bash \
-          cm2network/steamcmd:root -lc '
-            set -e
-            STEAMCMD="/home/steam/steamcmd/steamcmd.sh"
-            [ -x "$STEAMCMD" ] || STEAMCMD=$(command -v steamcmd.sh)
-            echo "Using $STEAMCMD"
-            "$STEAMCMD" +force_install_dir /refs +login anonymous +app_update 896660 validate +quit
-          '
+        docker run --rm -v "$PWD/.refs/valheim:/data" \
+          steamcmd/steamcmd:latest \
+          +force_install_dir /data +login anonymous +app_info_update 1 +app_update 896660 validate +quit
 
     - name: Cache BepInEx core refs
       id: bepinex-cache
