@@ -73,6 +73,32 @@ dotnet build src/LessSleep.csproj -c Release \
   -p:BepInExCoreDir=".../Steam/steamapps/common/Valheim/BepInEx/core"
 ```
 
+## CI / releasing
+
+| Workflow | Trigger | What it does |
+| --- | --- | --- |
+| `build` | push to `main`, pull requests | compiles and uploads the package as a build artifact |
+| `publish` | tag `vX.Y.Z` or manual dispatch | stamps the version, builds, publishes to Thunderstore with `tcli`, creates a GitHub release |
+
+CI has no game install, so `.github/actions/prepare-refs` downloads the Valheim dedicated
+server with SteamCMD (anonymous) and the BepInEx core from Thunderstore into a cached
+`.refs/` directory. Game DLLs are never committed to this repository.
+
+**One-time setup:** create a Thunderstore service account for the `LessCx` team
+(`Settings > Teams > LessCx > Service Accounts`) and store its token as a repository secret:
+
+```bash
+gh secret set TCLI_AUTH_TOKEN --repo LovelessCodes/LessSleep
+```
+
+**Release:** bump `version_number` in `manifest.json` (and `CHANGELOG.md`), commit, then:
+
+```bash
+git tag v1.0.1 && git push origin v1.0.1
+```
+
+The `publish` workflow stamps that version everywhere, so the tag is the source of truth.
+
 ## License
 
 MIT

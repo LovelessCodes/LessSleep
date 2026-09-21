@@ -1,0 +1,54 @@
+name: Prepare Valheim references
+description: >
+  Downloads the Valheim dedicated server (SteamCMD, anonymous) and the matching
+  BepInEx core assemblies, so the mod can compile without a local game install.
+  Both downloads are cached; game DLLs are never committed or redistributed.
+
+runs:
+  using: composite
+  steps:
+    - name: Cache Valheim dedicated server refs
+      id: valheim-cache
+      uses: actions/cache@v4
+      with:
+        path: .refs/valheim
+        key: valheim-dedicated-server-896660-v1
+
+    - name: Download Valheim dedicated server (SteamCMD)
+      if: steps.valheim-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        set -euo pipefail
+        mkdir -p .refs/valheim
+        docker run --rm -v "$PWD/.refs/valheim:/refs" cm2network/steamcmd:root \
+          +force_install_dir /refs +login anonymous +app_update 896660 validate +quit
+
+    - name: Cache BepInEx core refs
+      id: bepinex-cache
+      uses: actions/cache@v4
+      with:
+        path: .refs/bepinex
+        key: bepinex-pack-valheim-5.4.2350-v1
+
+    - name: Download BepInEx core
+      if: steps.bepinex-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        set -euo pipefail
+        mkdir -p .refs/bepinex
+        curl -fsSL -o /tmp/bepinex.zip \
+          "https://gcdn.thunderstore.io/live/repository/packages/denikson-BepInExPack_Valheim-5.4.2350.zip"
+        unzip -q -o /tmp/bepinex.zip -d .refs/bepinex
+        if [ -d .refs/bepinex/BepInExPack_Valheim ]; then
+          cp -a .refs/bepinex/BepInExPack_Valheim/. .refs/bepinex/
+        fi
+
+    - name: Verify references
+      shell: bash
+      run: |
+        set -euo pipefail
+        test -f ".refs/valheim/valheim_server_Data/Managed/assembly_valheim.dll"
+        test -f ".refs/valheim/valheim_server_Data/Managed/UnityEngine.CoreModule.dll"
+        test -f ".refs/bepinex/BepInEx/core/BepInEx.dll"
+        test -f ".refs/bepinex/BepInEx/core/0Harmony.dll"
+        echo "References ready."

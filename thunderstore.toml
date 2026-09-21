@@ -1,0 +1,26 @@
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "LessCx"
+name = "LessSleep"
+versionNumber = "1.0.0"
+description = "Sleep voting for dedicated servers: skip the night before everyone is in bed, if a configurable percentage of players agree. Works with vanilla clients."
+websiteUrl = "https://github.com/LovelessCodes/LessSleep"
+containsNsfwContent = false
+dependencies = { "denikson-BepInExPack_Valheim" = "5.4.2350" }
+
+[build]
+icon = "./icon.png"
+readme = "./README.md"
+outdir = "./dist"
+[[build.copy]]
+source = "./src/bin/Release/LessSleep.dll"
+target = "BepInEx/plugins/LessSleep.dll"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = ["valheim"]
+
+[publish.categories]
+valheim = ["server-side", "client-side", "tweaks"]

@@ -1,6 +1,7 @@
 bin/
 obj/
 dist/
+.refs/
 .DS_Store
 *.user
 .vs/
