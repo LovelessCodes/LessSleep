@@ -82,7 +82,9 @@ dotnet build src/LessSleep.csproj -c Release \
 
 CI has no game install, so `.github/actions/prepare-refs` downloads the Valheim dedicated
 server with SteamCMD (anonymous) and the BepInEx core from Thunderstore into a cached
-`.refs/` directory. Game DLLs are never committed to this repository.
+`.refs/` directory. Game DLLs are never committed to this repository. When Valheim updates,
+bump the cache key in `.github/actions/prepare-refs/action.yml` so CI picks up fresh
+reference assemblies.
 
 **One-time setup:** create a Thunderstore service account for the `LessCx` team
 (`Settings > Teams > LessCx > Service Accounts`) and store its token as a repository secret:
