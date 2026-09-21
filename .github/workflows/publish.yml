@@ -77,7 +77,7 @@ jobs:
           fi
           dotnet tool install -g tcli
           export PATH="$PATH:$HOME/.dotnet/tools"
-          tcli publish --file "dist/LessCx-LessSleep-${VERSION}.zip" --package-version "${VERSION}"
+          tcli publish --file "dist/LessCx-LessSleep-${VERSION}.zip"
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
